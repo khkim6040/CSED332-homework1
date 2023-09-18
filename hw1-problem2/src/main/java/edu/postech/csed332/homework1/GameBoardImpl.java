@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  */
 class GameBoardImpl implements GameBoard {
     private final int width, height;
-
+    private Map<Position, Set<Unit>> board;
     // TODO add more fields to implement this class
 
     /**
@@ -24,13 +24,18 @@ class GameBoardImpl implements GameBoard {
     public GameBoardImpl(int width, int height) {
         this.width = width;
         this.height = height;
-
+        this.board = new HashMap<>();
         // TODO add more statements if necessary
     }
 
     @Override
     public void placeUnit(Unit obj, Position p) {
-        // TODO implement this
+        // TODO: isvalid()
+        Set<Unit> unitsAtPosition = board.getOrDefault(p, new HashSet<>());
+
+        unitsAtPosition.add(obj);
+
+        board.put(p, unitsAtPosition);
     }
 
     @Override
@@ -40,8 +45,7 @@ class GameBoardImpl implements GameBoard {
 
     @Override
     public Set<Unit> getUnitsAt(Position p) {
-        // TODO implement this
-        return Collections.emptySet();
+        return board.getOrDefault(p, new HashSet<>());
     }
 
     @Override
@@ -63,8 +67,18 @@ class GameBoardImpl implements GameBoard {
 
     @Override
     public Set<Monster> getMonsters() {
-        // TODO implement this
-        return Collections.emptySet();
+
+        Set<Monster> monsters = new HashSet<>();
+
+        for (Set<Unit> unitSet : board.values()) {
+            for (Unit unit : unitSet) {
+                if (unit instanceof Monster) {
+                    monsters.add((Monster) unit);
+                }
+            }
+        }
+
+        return monsters;
     }
 
     @Override
