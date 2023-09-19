@@ -15,21 +15,19 @@ import java.util.stream.Stream;
  * @see GameBoard#isValidBoard
  */
 public class GroundMob implements Monster {
-
+    GameBoard board;
     public GroundMob(GameBoard gameBoard) {
-        // TODO implement this
+        this.board = gameBoard;
     }
 
     @Override
     public boolean isGround() {
-        // TODO implement this
-        return false;
+        return true;
     }
 
     @Override
     public GameBoard getBoard() {
-        // TODO implement this
-        return null;
+        return board;
     }
 
     @Override

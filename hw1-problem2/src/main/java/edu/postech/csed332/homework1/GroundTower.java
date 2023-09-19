@@ -24,7 +24,7 @@ public class GroundTower implements Tower {
     @Override
     public Set<Monster> attack() {
         // get tower's position
-        Position towerPos = getThisPosition();
+        Position towerPos = getPosition();
         // see if there are any monsters near at tower
         int[] dx = {-1, 1, 0, 0};
         int[] dy = {0, 0, -1, 1};
@@ -37,7 +37,7 @@ public class GroundTower implements Tower {
                 Position nearbyPos = new Position(x, y);
                 Set<Unit> units = board.getUnitsAt(nearbyPos);
                 for(Unit unit: units) {
-                    if(unit.getClass() == GroundMob.class) {
+                    if(unit.isGround()) {
                         attackedMonsters.add((GroundMob)unit);
                     }
                 }
@@ -49,9 +49,5 @@ public class GroundTower implements Tower {
     @Override
     public GameBoard getBoard() {
         return board;
-    }
-
-    public Position getThisPosition() {
-        return this.board.getPosition(this);
     }
 }

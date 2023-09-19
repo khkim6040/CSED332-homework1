@@ -18,21 +18,19 @@ import java.util.stream.Stream;
  * @see GameBoard#isValidBoard
  */
 public class AirMob implements Monster {
-
+    GameBoard board;
     public AirMob(GameBoard gameBoard) {
-        // TODO implement this
+        this.board = gameBoard;
     }
 
     @Override
     public boolean isGround() {
-        // TODO implement this
         return false;
     }
 
     @Override
     public GameBoard getBoard() {
-        // TODO implement this
-        return null;
+        return board;
     }
 
     @Override

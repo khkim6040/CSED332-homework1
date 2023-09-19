@@ -13,7 +13,8 @@ import java.util.stream.Collectors;
 class GameBoardImpl implements GameBoard {
     private final int width, height;
     private Map<Position, Set<Unit>> board;
-
+    private int numMobsKilled;
+    private int numMobsEscaped;
     // TODO add more fields to implement this class
 
     /**
@@ -26,6 +27,8 @@ class GameBoardImpl implements GameBoard {
         this.width = width;
         this.height = height;
         this.board = new HashMap<>();
+        this.numMobsKilled = 0;
+        this.numMobsEscaped = 0;
         // TODO add more statements if necessary
     }
 
@@ -33,7 +36,7 @@ class GameBoardImpl implements GameBoard {
     public void placeUnit(Unit obj, Position p) {
         // TODO: check isValidBoard()
 
-        if(p.x() >= this.width || p.y() >= this.height) {
+        if(!isValidPosition(p)) {
             throw new IllegalArgumentException("Invalid Position");
         }
 
@@ -119,13 +122,19 @@ class GameBoardImpl implements GameBoard {
 
     @Override
     public int getNumMobsKilled() {
-        // TODO implement this
-        return 0;
+        return numMobsKilled;
     }
 
     @Override
     public int getNumMobsEscaped() {
-        // TODO implement this
-        return 0;
+        return numMobsEscaped;
+    }
+    
+    public void increaseNumMobsKilled() {
+        numMobsKilled++;
+    }
+
+    public void increaseNumMobsEscaped() {
+        numMobsEscaped++;
     }
 }

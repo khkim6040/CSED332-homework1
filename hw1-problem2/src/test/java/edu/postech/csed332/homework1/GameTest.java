@@ -2,8 +2,31 @@ package edu.postech.csed332.homework1;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.stream.Stream;
 public class GameTest {
+    // Method to generate test parameters
+    static Stream<Object[]> towerAndMobProvider() {
+        GameBoard board = new GameBoardImpl(5, 3);
+        return Stream.of(
+                new Object[]{new GroundTower(board), new GroundMob(board)},
+                new Object[]{new AirTower(board), new AirMob(board)}
+        );
+    }
+
+    static Stream<Object[]> twoAirOrGroundUnitsProvider() {
+        GameBoard board = new GameBoardImpl(5, 3);
+        return Stream.of(
+                new Object[]{new GroundTower(board), new GroundTower(board)},
+//                new Object[]{new GroundTower(board), new GroundMob(board)},
+                new Object[]{new GroundMob(board), new GroundMob(board)},
+                new Object[]{new AirTower(board), new AirTower(board)},
+//                new Object[]{new AirTower(board), new AirMob(board)},
+                new Object[]{new AirMob(board), new AirMob(board)}
+        );
+    }
 
     @Test
     void testGameBoard() {
@@ -60,6 +83,34 @@ public class GameTest {
         Assertions.assertTrue(tower.attack().contains(mob));
     }
 
-    // testPlaceSameUnitsOnSamePlaceShouldThrowException
+    @ParameterizedTest
+    @MethodSource("towerAndMobProvider")
+    void testTowerShouldAttackWhenMobIsNearby(Tower tower, Monster mob) {
+        var pos1 = new Position(1, 1);
+        var pos2 = new Position(1, 2);
+        tower.getBoard().placeUnit(tower, pos1);
+        tower.getBoard().placeUnit(mob, pos2);
+
+        Assertions.assertTrue(tower.attack().contains(mob));
+    }
+
+    @ParameterizedTest
+    @MethodSource("towerAndMobProvider")
+    void testTowerShouldNotAttackWhenMobIsFar(Tower tower, Monster mob) {
+        var pos1 = new Position(1, 1);
+        var pos2 = new Position(2, 2);
+        tower.getBoard().placeUnit(tower, pos1);
+        tower.getBoard().placeUnit(mob, pos2);
+
+        Assertions.assertFalse(tower.attack().contains(mob));
+    }
+
+    @ParameterizedTest
+    @MethodSource("twoAirOrGroundUnitsProvider")
+    void testPlaceSameUnitsOnSamePlaceShouldThrowException(Unit unit1, Unit unit2) {
+        var pos = new Position(1, 1);
+        unit1.getBoard().placeUnit(unit1, pos);
+        Assertions.assertThrows(IllegalStateException.class, () -> unit2.getBoard().placeUnit(unit2, pos));
+    }
     // testAirAttack
 }
