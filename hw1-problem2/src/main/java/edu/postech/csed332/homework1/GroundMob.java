@@ -1,6 +1,7 @@
 package edu.postech.csed332.homework1;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -16,6 +17,9 @@ import java.util.stream.Stream;
  */
 public class GroundMob implements Monster {
     GameBoard board;
+    // Priority of moving: x+1, y, x-1
+    int[] dx = {1, 0, 0, -1};
+    int[] dy = {0, -1, 1, 0};
     public GroundMob(GameBoard gameBoard) {
         this.board = gameBoard;
     }
@@ -32,7 +36,40 @@ public class GroundMob implements Monster {
 
     @Override
     public Position move() {
-        // TODO implement this
-        return null;
+        Position curPos = getPosition();
+        for(int i=0; i<4; i++) {
+            Position newPos = new Position(curPos.x()+dx[i], curPos.y()+dy[i]);
+            if(isMovable(newPos)) {
+                return newPos;
+            }
+        }
+        // Stay or Go?
+        return getPosition();
+    }
+
+    public boolean isMovable(Position pos) {
+        // check if pos is valid position
+        if(!board.isValidPosition(pos)) {
+            return false;
+        }
+        // check if any ground units are already there
+        Set<Unit> UnitsOnPos = board.getUnitsAt(pos);
+        for(Unit unit: UnitsOnPos) {
+            if(unit.isGround()) {
+                return false;
+            }
+        }
+        // check if GroundTower is on neabyPos
+        for(int i=0; i<4; i++) {
+            Position nearbyPos = new Position(pos.x()+dx[i], pos.y()+dy[i]);
+            Set<Unit> nearbyUnits = board.getUnitsAt(nearbyPos);
+            for(Unit unit: nearbyUnits) {
+                if(unit instanceof GroundTower) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }

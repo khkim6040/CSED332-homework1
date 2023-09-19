@@ -37,8 +37,8 @@ public class AirTower implements Tower {
                 Position nearbyPos = new Position(x, y);
                 Set<Unit> units = board.getUnitsAt(nearbyPos);
                 for(Unit unit: units) {
-                    if(!unit.isGround()) {
-                        attackedMonsters.add((AirMob)unit);
+                    if(unit instanceof AirMob) {
+                        attackedMonsters.add((Monster)unit);
                     }
                 }
             }

@@ -20,10 +20,10 @@ public class GameTest {
         GameBoard board = new GameBoardImpl(5, 3);
         return Stream.of(
                 new Object[]{new GroundTower(board), new GroundTower(board)},
-//                new Object[]{new GroundTower(board), new GroundMob(board)},
+                new Object[]{new GroundTower(board), new GroundMob(board)},
                 new Object[]{new GroundMob(board), new GroundMob(board)},
+                new Object[]{new AirTower(board), new GroundMob(board)},
                 new Object[]{new AirTower(board), new AirTower(board)},
-//                new Object[]{new AirTower(board), new AirMob(board)},
                 new Object[]{new AirMob(board), new AirMob(board)}
         );
     }
@@ -105,12 +105,24 @@ public class GameTest {
         Assertions.assertFalse(tower.attack().contains(mob));
     }
 
+
     @ParameterizedTest
     @MethodSource("twoAirOrGroundUnitsProvider")
-    void testPlaceSameUnitsOnSamePlaceShouldThrowException(Unit unit1, Unit unit2) {
+    void testisValidBoardOnSamePlace(Unit unit1, Unit unit2) {
         var pos = new Position(1, 1);
         unit1.getBoard().placeUnit(unit1, pos);
-        Assertions.assertThrows(IllegalStateException.class, () -> unit2.getBoard().placeUnit(unit2, pos));
+        unit2.getBoard().placeUnit(unit2, pos);
+        Assertions.assertFalse(unit1.getBoard().isValidBoard());
+    }
+
+    @Test
+    void testIsValidBoardOnRightPlace() {
+        var board = new GameBoardImpl(5, 3);
+        var tower = new GroundTower(board);
+        var pos1 = new Position(1, 1);
+        Assertions.assertTrue(board.isValidBoard());
     }
     // testAirAttack
+    // testClearBoard
+    // testStep
 }

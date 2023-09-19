@@ -37,8 +37,8 @@ public class GroundTower implements Tower {
                 Position nearbyPos = new Position(x, y);
                 Set<Unit> units = board.getUnitsAt(nearbyPos);
                 for(Unit unit: units) {
-                    if(unit.isGround()) {
-                        attackedMonsters.add((GroundMob)unit);
+                    if(unit instanceof GroundMob) {
+                        attackedMonsters.add((Monster) unit);
                     }
                 }
             }

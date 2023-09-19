@@ -35,7 +35,6 @@ public class AirMob implements Monster {
 
     @Override
     public Position move() {
-        // TODO implement this
-        return null;
+        return getPosition();
     }
 }
