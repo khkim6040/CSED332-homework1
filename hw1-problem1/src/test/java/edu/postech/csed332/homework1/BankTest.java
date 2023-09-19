@@ -1,5 +1,6 @@
 package edu.postech.csed332.homework1;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -87,8 +88,19 @@ public class BankTest {
         // compare
         assertIterableEquals(accounts, expected_accounts);
     }
-    // testTransferMoneyShouldFailif~~~
-    // testwithdrawshouldfailwhenamountisnegative
-    // testwithdrawshouldfailwhenamountismorethanbalance
+
+    @Test
+    void testWithdrawShouldBeFailedWhenBalanceIsInsufficient() {
+        String name = "Thomas";
+        Account account = wb.createAccount(name, 10, 0.01, false);
+        Assertions.assertThrows(IllegalStateException.class, () -> account.withdraw(11));
+    }
+
+    @Test
+    void testWithdrawShouldBeFailedWhenAmountIsNegative() {
+        String name = "Thomas";
+        Account account = wb.createAccount(name, 10, 0.01, false);
+        Assertions.assertThrows(IllegalStateException.class, () -> account.withdraw(-1));
+    }
 }
 
