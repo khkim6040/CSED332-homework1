@@ -117,12 +117,45 @@ public class GameTest {
 
     @Test
     void testIsValidBoardOnRightPlace() {
-        var board = new GameBoardImpl(5, 3);
-        var tower = new GroundTower(board);
-        var pos1 = new Position(1, 1);
+        GameBoard board = new GameBoardImpl(5, 3);
+        Unit unit = new GroundTower(board);
+        Position pos = new Position(1, 1);
+        board.placeUnit(unit, pos);
         Assertions.assertTrue(board.isValidBoard());
     }
-    // testAirAttack
-    // testClearBoard
-    // testStep
+
+    @Test
+    void testClear() {
+        GameBoard board = new GameBoardImpl(5, 3);
+
+        Unit unit1 = new GroundMob(board);
+        Unit unit2 = new GroundTower(board);
+        Position pos1 = new Position(1, 1);
+        Position pos2 = new Position(2, 2);
+
+        board.placeUnit(unit1, pos1);
+        board.placeUnit(unit2, pos2);
+
+        Assertions.assertFalse(board.getUnitsAt(pos1).isEmpty());
+        Assertions.assertFalse(board.getUnitsAt(pos2).isEmpty());
+
+        board.clear();
+
+        Assertions.assertTrue(board.getUnitsAt(pos1).isEmpty());
+        Assertions.assertTrue(board.getUnitsAt(pos2).isEmpty());
+    }
+
+    @Test
+    void testRemoveUnit() {
+        GameBoardImpl board = new GameBoardImpl(5, 3);
+        Unit unit = new GroundMob(board);
+        Position pos = new Position(1, 1);
+
+        board.placeUnit(unit, pos);
+        Assertions.assertFalse(board.getUnitsAt(pos).isEmpty());
+
+        board.removeUnit(unit, pos);
+
+        Assertions.assertTrue(board.getUnitsAt(pos).isEmpty());
+    }
 }

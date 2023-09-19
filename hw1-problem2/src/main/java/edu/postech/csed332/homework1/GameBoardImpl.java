@@ -186,12 +186,4 @@ class GameBoardImpl implements GameBoard {
     public int getNumMobsEscaped() {
         return numMobsEscaped;
     }
-    
-    public void increaseNumMobsKilled(int num) {
-        numMobsKilled += num;
-    }
-
-    public void increaseNumMobsEscaped(int num) {
-        numMobsEscaped += num;
-    }
 }

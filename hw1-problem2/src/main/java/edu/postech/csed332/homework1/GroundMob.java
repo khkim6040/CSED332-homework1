@@ -1,8 +1,8 @@
 package edu.postech.csed332.homework1;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
+import java.util.random.*;
 
 /**
  * A ground monster that moves towards the goal position of the board while satisfying
@@ -13,7 +13,7 @@ import java.util.stream.Stream;
  * you can define a new (abstract) superclass that this class inherits. In this case,
  * some methods can be moved to the abstract class.
  *
- * @see GameBoard#isValidBoard
+ * @see GameBoard#isValidBoard1
  */
 public class GroundMob implements Monster {
     GameBoard board;
@@ -37,13 +37,29 @@ public class GroundMob implements Monster {
     @Override
     public Position move() {
         Position curPos = getPosition();
+        List<Position> possibleMoves = new ArrayList<>();
+        boolean isTowardMovePossible = false;
         for(int i=0; i<4; i++) {
             Position newPos = new Position(curPos.x()+dx[i], curPos.y()+dy[i]);
             if(isMovable(newPos)) {
-                return newPos;
+                if(i==0) {
+                    isTowardMovePossible = true;
+                }
+                possibleMoves.add(newPos);
             }
         }
-        // Stay or Go?
+
+        if(!possibleMoves.isEmpty()) {
+            if(isTowardMovePossible && Math.random()<=0.6) {
+                return possibleMoves.get(0);
+            }
+            else{
+                Random rand = new Random();
+                int randomIndex = rand.nextInt(possibleMoves.size());
+                return possibleMoves.get(randomIndex);
+            }
+        }
+
         return getPosition();
     }
 
@@ -69,7 +85,6 @@ public class GroundMob implements Monster {
                 }
             }
         }
-
         return true;
     }
 }
