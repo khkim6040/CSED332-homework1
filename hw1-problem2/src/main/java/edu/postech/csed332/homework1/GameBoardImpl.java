@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
  */
 class GameBoardImpl implements GameBoard {
     private final int width, height;
+    private Map<Position, Set<Unit>> board;
 
     // TODO add more fields to implement this class
 
@@ -24,13 +25,29 @@ class GameBoardImpl implements GameBoard {
     public GameBoardImpl(int width, int height) {
         this.width = width;
         this.height = height;
-
+        this.board = new HashMap<>();
         // TODO add more statements if necessary
     }
 
     @Override
     public void placeUnit(Unit obj, Position p) {
-        // TODO implement this
+        // TODO: check isValidBoard()
+
+        if(p.x() >= this.width || p.y() >= this.height) {
+            throw new IllegalArgumentException("Invalid Position");
+        }
+
+        Set<Unit> unitsAtPosition = board.getOrDefault(p, new HashSet<>());
+        for(Unit unit: unitsAtPosition) {
+            // if unit's class is same as obj's class, then throw error
+            if(unit.getClass() == obj.getClass()) {
+                throw new IllegalStateException("Already exists SAME UNIT at this position");
+            }
+        }
+
+        // increase 1 unit count of obj.getClass()
+        unitsAtPosition.add(obj);
+        board.put(p, unitsAtPosition);
     }
 
     @Override
@@ -40,14 +57,17 @@ class GameBoardImpl implements GameBoard {
 
     @Override
     public Set<Unit> getUnitsAt(Position p) {
-        // TODO implement this
-        return Collections.emptySet();
+        return board.getOrDefault(p, new HashSet<>());
     }
 
     @Override
     public Position getPosition(Unit obj) {
-        // TODO implement this
-        return null;
+        for (Map.Entry<Position, Set<Unit>> entry : board.entrySet()) {
+            if (entry.getValue().contains(obj)) {
+                return entry.getKey();
+            }
+        }
+        return null; // Unit not found on the board
     }
 
     @Override
@@ -63,14 +83,28 @@ class GameBoardImpl implements GameBoard {
 
     @Override
     public Set<Monster> getMonsters() {
-        // TODO implement this
-        return Collections.emptySet();
+        Set<Monster> monsters = new HashSet<>();
+        for (Set<Unit> unitSet : board.values()) {
+            for (Unit unit : unitSet) {
+                if (unit instanceof Monster) {
+                    monsters.add((Monster) unit);
+                }
+            }
+        }
+        return monsters;
     }
 
     @Override
     public Set<Tower> getTowers() {
-        // TODO implement this
-        return Collections.emptySet();
+        Set<Tower> towers = new HashSet<>();
+        for (Set<Unit> unitSet : board.values()) {
+            for (Unit unit : unitSet) {
+                if (unit instanceof Tower) {
+                    towers.add((Tower) unit);
+                }
+            }
+        }
+        return towers;
     }
 
     @Override
