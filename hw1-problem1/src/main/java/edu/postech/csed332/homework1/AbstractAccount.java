@@ -1,33 +1,56 @@
 package edu.postech.csed332.homework1;
 
 public abstract class AbstractAccount implements Account {
-    //TODO implement this (including fields and a constructor if needed)
+    protected int accountNumber;
+    private String name;
+    private double balance;
+    private double annualInterestRate;
+
+
+    public AbstractAccount(int accountNumber, String name, double initial, double rate) {
+        this.accountNumber = accountNumber;
+        this.name = name;
+        this.balance = initial;
+        this.annualInterestRate = rate;
+    }
 
     @Override
     public int getAccountNumber() {
-        //TODO implement this
-        return 0;
+        return accountNumber;
     }
 
     @Override
     public double getBalance() {
-        //TODO implement this
-        return 0;
+        return balance;
     }
 
     @Override
     public String getOwner() {
-        //TODO implement this
-        return null;
+        return name;
     }
 
     @Override
     public void deposit(double amount) {
-        //TODO implement this
+        balance += amount;
     }
 
     @Override
     public void withdraw(double amount) throws IllegalStateException {
-        //TODO implement this
+        if(amount < 0) {
+            throw new IllegalStateException("Amount must be nonnegative");
+        }
+        if(Double.compare(balance, amount) < 0) {
+            throw new IllegalStateException("Insufficient Balance");
+        }
+        balance -= amount;
     }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    public double getAnnualInterestRate() {
+        return this.annualInterestRate;
+    }
+
 }
