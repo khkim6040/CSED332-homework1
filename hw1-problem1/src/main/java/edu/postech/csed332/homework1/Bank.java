@@ -11,14 +11,15 @@ import java.util.List;
  */
 public class Bank {
 
-    // TODO: add more fields to implement this class
+    private List<Account> accounts;
+    private int accountNumber = 100_000;
     // Use the Java Collection Framework, including List, Map, Set, etc.
 
     /**
      * Create a bank. Initially, there is no account.
      */
     Bank() {
-        // TODO implement this
+        accounts = new ArrayList<>();
     }
 
     /**
@@ -28,7 +29,11 @@ public class Bank {
      * @return the account with number accNum; null if no such account exists
      */
     Account findAccount(int accNum) {
-        // TODO implement this
+        for(Account account: accounts) {
+            if(account.getAccountNumber() == accNum) {
+                return account;
+            }
+        }
         return null;
     }
 
@@ -39,8 +44,14 @@ public class Bank {
      * @return a list of accounts sorted in ascending order by account number
      */
     List<Account> findAccountByName(String name) {
-        // TODO implement this
-        return null;
+        List<Account> result =  new ArrayList<>();
+        for(Account account: accounts) {
+            if(account.getOwner() == name) {
+                result.add(account);
+            }
+        }
+        result.sort(Comparator.comparingInt(Account::getAccountNumber));
+        return result;
     }
 
     /**
@@ -53,8 +64,16 @@ public class Bank {
      * @return the newly created account; null if not possible
      */
     Account createAccount(String name, double initial, double rate, boolean compound) {
-        // TODO implement this
-        return null;
+        Account account;
+        if(compound == true) {
+            account = new CompoundInterestAccount(accountNumber, name, initial, rate);
+        }
+        else {
+            account = new SimpleInterestAccount(accountNumber, name, initial, rate);
+        }
+        accounts.add(account);
+        accountNumber++;
+        return account;
     }
 
     /**
@@ -66,6 +85,16 @@ public class Bank {
      * @throws IllegalStateException if not possible
      */
     void transfer(Account src, Account dst, double amount) throws IllegalStateException {
-        // TODO implement this
+        // check whether src or dst exists
+        // check balance in src account at least more than amount
+        if(src == null || dst == null) {
+            throw new IllegalStateException("Invalid Account");
+        }
+        try {
+            src.withdraw(amount);
+            dst.deposit(amount);
+        } catch (Exception e) {
+            throw new IllegalStateException("Withdraw Value ERROR");
+        }
     }
 }

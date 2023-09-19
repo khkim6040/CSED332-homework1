@@ -3,6 +3,9 @@ package edu.postech.csed332.homework1;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BankTest {
@@ -62,7 +65,30 @@ public class BankTest {
         assertEquals(account.getClass(), CompoundInterestAccount.class);
         account.elapseTime(20);
         assertEquals(90049.08350, account.getBalance(), 0.01);
-
     }
+
+    @Test
+    void testSimpleInterestAccount() {
+        wb.createAccount("Thomas", 90000, 0.01, false);
+        var account = wb.findAccount(100000);
+        assertNotNull(account);
+        assertEquals(account.getClass(), SimpleInterestAccount.class);
+        account.elapseTime(20);
+        assertEquals(90049.31507, account.getBalance(), 0.01);
+    }
+    // testFindAccountsByName
+    @Test
+    void testFindAccountByName() {
+        String name = "Thomas";
+        List<Account> expected_accounts = new ArrayList<>();
+        expected_accounts.add(wb.createAccount(name, 90000, 0.01, false));
+        expected_accounts.add(wb.createAccount(name, 90001, 0.02, true));
+        List<Account> accounts = wb.findAccountByName(name);
+        // compare
+        assertIterableEquals(accounts, expected_accounts);
+    }
+    // testTransferMoneyShouldFailif~~~
+    // testwithdrawshouldfailwhenamountisnegative
+    // testwithdrawshouldfailwhenamountismorethanbalance
 }
 
